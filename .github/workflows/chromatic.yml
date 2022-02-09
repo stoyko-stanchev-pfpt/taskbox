@@ -3,34 +3,20 @@
 # Workflow name
 name: 'Chromatic'
 
-  # Event for the workflow
-on:
+on: 
   workflow_dispatch:
     inputs:
-      sha:
-        description: The SHA-1 hash referring to the commit to check.
+      logLevel:
+        description: 'Log level'     
         required: true
-      ref:
-        description: The head branch associated with the pull request.
-        required: true
-
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
 # List of jobs
 jobs:
-  chromatic-deployment:
-    # Operating System
+  printInputs:
     runs-on: ubuntu-latest
-    # Job steps
     steps:
-      - uses: actions/checkout@v1
-      - name: Install dependencies
-        run: npm install
-        # 👇 Adds Chromatic as a step in the workflow
-      - name: Publish to Chromatic
-        uses: chromaui/action@v1
-        # Chromatic GitHub Action options
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          buildScriptName: storybook_chromatic
-#          autoAcceptChanges: develop
+    - run: |
+        echo "Log level: ${{ github.event.inputs.logLevel }}"
+        echo "Tags: ${{ github.event.inputs.tags }}" 
